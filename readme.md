@@ -1,5 +1,56 @@
 # CG Animation - Ball to Rocket (OpenGL + GLUT)
 
+---
+
+## ⚙️ Setup & Prerequisites
+
+### 🖥 Supported Platforms
+
+* macOS
+* Linux
+* Windows (via MinGW)
+
+### 📦 Requirements
+
+* A C compiler (`gcc` or `clang`)
+* OpenGL + GLUT libraries
+* PNG support via `stb_image.h` (already included)
+
+### 🚀 Quick Start (Manual Build)
+
+#### macOS:
+
+```bash
+gcc main.c -o cg_anim -framework OpenGL -framework GLUT -DGL_SILENCE_DEPRECATION
+./cg_anim
+```
+
+#### Linux (Debian-based):
+
+```bash
+sudo apt install build-essential freeglut3-dev libglew-dev
+gcc main.c -o cg_anim -lGL -lGLU -lglut
+./cg_anim
+```
+
+#### Windows (with MinGW):
+
+```bash
+gcc main.c -IC:\freeglut\include -LC:\freeglut\lib -lfreeglut -lopengl32 -o cg_anim.exe
+cg_anim.exe
+```
+
+### 🔄 Automatic Setup
+
+This repo includes platform-specific setup scripts:
+
+* `setup_unix.sh`: For macOS & Linux – installs dependencies and builds automatically.
+* `setup_windows.bat`: For Windows – installs MinGW, sets up freeglut, builds the executable, and copies required DLLs.
+
+> Just run the appropriate script for your OS and you're good to go!
+
+---
+
 ## 🧠 Overview
 
 This project is a simple 2D OpenGL animation where a ball bounces a few times, changes color on each bounce, then morphs into a rocket and flies upward. The animation is projected in front of a classroom-like background. The animation starts only after pressing the space bar. The first background image (`cg_background.png`) is displayed at launch and then switches to `cg_background2.png` once the animation starts.
@@ -175,3 +226,18 @@ Enhancements you could try:
 * Add starry background after rocket launches
 * Replace rocket with GIF-style fire trail using frame animation
 
+---
+
+### 📽 Slides (for presentation)
+
+* This project uses [`maaslalani/slides`](https://github.com/maaslalani/slides) for live markdown-based slides.
+* Install it using:
+
+  ```bash
+  go install github.com/maaslalani/slides@latest
+  ```
+* This tool requires [Go](https://golang.org/) to be installed on your system.
+
+## 📑 Code Explanation & Presentation Script
+
+[Detailed code breakdown and full team presentation script available here](https://www.notion.so/CG-Animation-1f357d6b7a8580639154c933c862243c?pvs=4)
