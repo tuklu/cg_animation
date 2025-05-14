@@ -1,6 +1,3 @@
-// main.c
-// CG Animation: Ball Bounces, Morphs to Rocket, Launches – Loops on Whiteboard
-
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
@@ -16,15 +13,19 @@ bool rocketMode = false;
 
 int frame = 0;
 float ballX = 0.0f;
-float ballY = -0.8f;
+float ballY = -0.3f;
 float ballVelocity = 0.025f;
 float gravity = -0.001f;
-float rocketY = -0.8f;
+float rocketY = -0.3f;
 int bounceCount = 0;
 
-float bgAspect = 1.0f; // dynamically set based on image
+float bgAspect = 1.0f;  // Dynamically set based on image
 
-// Store RGB colors for each bounce
+// Safe vertical range (whiteboard safe area)
+#define SAFE_BOTTOM -0.15f
+#define SAFE_TOP     0.3f
+
+// Ball colors on each bounce
 float bounceColors[][3] = {
     {1.0, 0.0, 0.0},  // Red
     {0.0, 1.0, 0.0},  // Green
@@ -58,28 +59,28 @@ void drawTexturedQuad(GLuint texture) {
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture);
     glColor3f(1, 1, 1);
+
     glBegin(GL_QUADS);
         glTexCoord2f(0, 0); glVertex2f(-1, 1);
         glTexCoord2f(1, 0); glVertex2f(1, 1);
         glTexCoord2f(1, 1); glVertex2f(1, -1);
         glTexCoord2f(0, 1); glVertex2f(-1, -1);
     glEnd();
+
     glDisable(GL_TEXTURE_2D);
 }
 
 void drawBall(float x, float y) {
     float* color = bounceColors[currentColor % 4];
     glColor3f(color[0], color[1], color[2]);
-    glPushMatrix();
-    glScalef(1.0f, bgAspect, 1.0f);
+
     glBegin(GL_TRIANGLE_FAN);
-        glVertex2f(x, y / bgAspect);
+        glVertex2f(x, y);
         for (int angle = 0; angle <= 360; angle += 10) {
             float rad = angle * 3.14159f / 180.0f;
-            glVertex2f(x + cos(rad) * 0.05f, (y + sin(rad) * 0.05f) / bgAspect);
+            glVertex2f(x + cos(rad) * 0.05f, y + sin(rad) * 0.05f);
         }
     glEnd();
-    glPopMatrix();
 }
 
 void drawRocket(float x, float y) {
@@ -123,8 +124,8 @@ void timer(int value) {
             ballY += ballVelocity;
             ballVelocity += gravity;
 
-            if (ballY < -0.8f) {
-                ballY = -0.8f;
+            if (ballY < SAFE_BOTTOM) {
+                ballY = SAFE_BOTTOM;
                 ballVelocity *= -0.8f;
                 bounceCount++;
                 currentColor++;
@@ -136,10 +137,9 @@ void timer(int value) {
             }
         } else {
             rocketY += 0.02f;
-            if (rocketY > 1.2f) {
-                // Reset animation loop
+            if (rocketY > SAFE_TOP) {
                 rocketMode = false;
-                ballY = -0.8f;
+                ballY = SAFE_BOTTOM;
                 ballVelocity = 0.025f;
                 bounceCount = 0;
                 currentColor = 0;
@@ -179,12 +179,12 @@ void key(unsigned char key, int x, int y) {
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-    glutInitWindowSize(1500, 1000); // initial window, will reshape dynamically
+    glutInitWindowSize(1500 , 1000);
     glutCreateWindow("CG Animation - Ball to Rocket");
 
     glClearColor(0, 0, 0, 1);
     bg1 = loadTexture("cg_background.png", false);
-    bg2 = loadTexture("cg_background2.png", true); // track aspect
+    bg2 = loadTexture("cg_background2.png", true); // sets bgAspect
     rocketTex = loadTexture("rocket.png", false);
 
     glutDisplayFunc(display);
@@ -195,4 +195,3 @@ int main(int argc, char** argv) {
     glutMainLoop();
     return 0;
 }
-
