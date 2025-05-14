@@ -71,6 +71,7 @@ void drawTexturedQuad(GLuint texture) {
     glDisable(GL_TEXTURE_2D);
 }
 
+/*
 void drawBall(float x, float y) {
     float* color = bounceColors[currentColor % 4];
     glColor3f(color[0], color[1], color[2]);
@@ -80,6 +81,28 @@ void drawBall(float x, float y) {
         for (int angle = 0; angle <= 360; angle += 10) {
             float rad = angle * 3.14159f / 180.0f;
             glVertex2f(x + cos(rad) * 0.05f, y + sin(rad) * 0.05f);
+        }
+    glEnd();
+}
+*/
+
+
+void drawBall(float x, float y) {
+    float* color = bounceColors[currentColor % 4];
+    glColor3f(color[0], color[1], color[2]);
+
+    // Get the current viewport dimensions to calculate aspect ratio correction
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    float viewportAspect = (float)viewport[2] / (float)viewport[3];
+    
+    glBegin(GL_TRIANGLE_FAN);
+        glVertex2f(x, y);
+        for (int angle = 0; angle <= 360; angle += 10) {
+            float rad = angle * 3.14159f / 180.0f;
+            // Apply aspect ratio correction to make the circle appear round
+            glVertex2f(x + cos(rad) * 0.05f, 
+                       y + sin(rad) * 0.05f * viewportAspect);
         }
     glEnd();
 }
