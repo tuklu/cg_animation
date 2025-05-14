@@ -236,7 +236,7 @@ Enhancements you could try:
   ```bash
   go install github.com/maaslalani/slides@latest
   ```
-* This tool requires [Go](https://golang.org/) to be installed on your system.
+> This tool requires [Go](https://golang.org/) to be installed on your system.
 
 ## 📑 Code Explanation & Presentation Script
 
