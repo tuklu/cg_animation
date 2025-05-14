@@ -10,6 +10,7 @@
 GLuint bg1, bg2, rocketTex;
 bool animationStarted = false;
 bool rocketMode = false;
+bool isPaused = false;
 
 int frame = 0;
 float ballX = 0.0f;
@@ -119,7 +120,7 @@ void display() {
 }
 
 void timer(int value) {
-    if (animationStarted) {
+    if (animationStarted && !isPaused) {
         if (!rocketMode) {
             ballY += ballVelocity;
             ballVelocity += gravity;
@@ -170,16 +171,20 @@ void reshape(int w, int h) {
 }
 
 void key(unsigned char key, int x, int y) {
-    if (key == ' ' && !animationStarted) {
-        animationStarted = true;
-        frame = 0;
+    if (key == ' ') {
+        if (!animationStarted) {
+            animationStarted = true;
+            frame = 0;
+        } else {
+            isPaused = !isPaused;  // toggle pause/resume
+        }
     }
 }
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-    glutInitWindowSize(1500 , 1000);
+    glutInitWindowSize(1500, 1000);
     glutCreateWindow("CG Animation - Ball to Rocket");
 
     glClearColor(0, 0, 0, 1);
